@@ -1,0 +1,38 @@
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: ${RABBIT_USERNAME}
+    password: ${RABBIT_PASSWORD}
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: "*"
+  data:
+    mongodb:
+      uri: ${DB_URL}
+      database: ${DB_NAME}
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/userdb
+#    username: ujwal
+#    password: ujwal
+#
+#  jpa:
+#    show-sql: true
+#    hibernate:
+#      ddl-auto: update
+#
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#    database: postgresql
+
+
+server:
+  port: 8082
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
