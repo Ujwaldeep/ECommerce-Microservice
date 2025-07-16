@@ -19,6 +19,11 @@ public class ProductController {
 
     private final ProductService productService;
 
+//    @GetMapping
+//    public ResponseEntity<String> simulateFailure(@RequestBody ProductRequest product) {
+//        return new ResponseEntity.ok("Product service is ok");
+//    }
+
     @PostMapping
     public ResponseEntity<ProductResponse> createProduct(@RequestBody ProductRequest product) {
         return new ResponseEntity<ProductResponse>(productService.createProduct(product), HttpStatus.CREATED);

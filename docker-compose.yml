@@ -45,6 +45,14 @@ services:
       - 9411:9411
     networks:
       - backend
+
+  redis:
+    image: bitnami/redis
+    container_name: redis
+    ports:
+      - 6379:6379
+    networks:
+      - backend
 networks:
   backend:
     driver: bridge

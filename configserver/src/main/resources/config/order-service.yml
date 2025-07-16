@@ -8,6 +8,15 @@ spring:
     port: 5672
     username: ${RABBIT_USERNAME}
     password: ${RABBIT_PASSWORD}
+    exchange:
+      name: order.exchange
+    queue:
+      name: order.queue
+    routing:
+      key: order.tracking
+
+
+
   management:
     endpoints:
       web:
@@ -43,3 +52,21 @@ logging:
       max-file-size: 5MB
       max-history: 7
 
+#Circuit Breaker
+resilence4j:
+  circuitbreaker:
+    instances:
+      productService:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 10s
+        failureRateThreshold: 50
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        slidingWindowType: count_based
+  retry:
+    instances:
+      retryBreaker:
+        maxAttemps: 5
+        waitDuration: 500ms

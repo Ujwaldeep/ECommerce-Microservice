@@ -8,11 +8,12 @@ import com.ecommerce.order.dto.ProductResponse;
 import com.ecommerce.order.dto.UserResponse;
 import com.ecommerce.order.models.CartItem;
 import com.ecommerce.order.repositories.CartItemRepository;
+import io.github.resilience4j.retry.annotation.Retry;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +25,9 @@ public class CartService {
     private final ProductServiceClient productServiceClient;
     private final UserServiceClient userServiceClient;
     private final CartItemRepository cartItemRepository;
+
+//    @CircuitBreaker(name="productService",fallbackMethod="addToCartFallBack")
+    @Retry(name="retryBreaker",fallbackMethod="addToCartFallBack")
     public Boolean addToCart(String userId, CartItemRequest request) {
         ProductResponse productResponse = productServiceClient.getProductDetails(String.valueOf(request.getProductId()));
         if(productResponse == null | productResponse.getStockQuantity()< request.getQuantity()){
@@ -50,6 +54,13 @@ public class CartService {
             cartItemRepository.save(cartItem);
         }
         return true;
+    }
+
+    public boolean addToCartFallBack(String userId,
+                                     CartItemRequest request,
+                                     Exception exception){
+        System.out.println("Fallback called");
+        return false;
     }
 
     public boolean deleteFromCart(String userId, Long productId) {
