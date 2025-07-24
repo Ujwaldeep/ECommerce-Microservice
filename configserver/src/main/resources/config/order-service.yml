@@ -3,20 +3,37 @@ spring:
     url: ${DB_URL}
     username: ${DB_USER}
     password: ${DB_PASSWORD}
-#    Cloud AMQP where the rabbit mq hosted
-  rabbitmq:
-    host: ${RABBITMQ_HOST:localhost}
-    port: ${RABBITMQ_PORT:5672}
-    username: ${RABBIT_USERNAME:guest}
-    password: ${RABBIT_PASSWORD:guest}
-    virtual-host: ${RABBIT_VHOST:guest}
-    connection-timeout: 30000
-    exchange:
-      name: order.exchange
-    queue:
-      name: order.queue
-    routing:
-      key: order.tracking
+
+  cloud:
+    stream:
+      bindings:
+        createOrder-out-0:
+          destination: order.exchange.new
+          content-type: application/json
+
+      kafka:
+        binder:
+          brokers: localhost:9092
+
+#      rabbit:
+#        bindings:
+#          createOrder-out-0:
+#            producer:
+#              routing-key-expression: '''order.tracking.new'''
+##    Cloud AMQP where the rabbit mq hosted
+#  rabbitmq:
+#    host: ${RABBITMQ_HOST:localhost}
+#    port: ${RABBITMQ_PORT:5672}
+#    username: ${RABBIT_USERNAME:guest}
+#    password: ${RABBIT_PASSWORD:guest}
+#    virtual-host: ${RABBIT_VHOST:guest}
+#    connection-timeout: 30000
+#    exchange:
+#      name: order.exchange
+#    queue:
+#      name: order.queue
+#    routing:
+#      key: order.tracking
 
 
 

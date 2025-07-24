@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+    private final KeyCloakAdminService keyCloakAdminService;
     private final UserRepository userRepository;
 
 //    private List<User> userList = new ArrayList<>();
@@ -30,9 +31,12 @@ public class UserService {
     public void addUser(UserRequest userRequest){
 //        user.setId(nextId++);
         User user = new User();
+        String token = keyCloakAdminServisce.getAdminAccessToken();
+        String keycloakUserId = keyCloakAdminService.createUser(token,userRequest);
 //        System.out.println(user);
         updateUserFromRequest(user,userRequest);
 //        System.out.println(user);
+        user.setKeycloakId(keycloakUserId);
         userRepository.save(user);
     }
 

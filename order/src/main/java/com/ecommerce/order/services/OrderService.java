@@ -13,6 +13,7 @@ import com.ecommerce.order.models.OrderStatus;
 import com.ecommerce.order.repositories.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -28,7 +29,8 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final CartService cartService;
     private final UserServiceClient userServiceClient;
-    private final RabbitTemplate rabbitTemplate;
+    private final StreamBridge streamBridge;
+//    private final RabbitTemplate rabbitTemplate;
 //    private final UserRepository userRepository;
 
     public Optional<OrderResponse> createOrder(String userId) {
@@ -75,8 +77,10 @@ public class OrderService {
                 savedOrder.getTotalAmount(),
                 savedOrder.getCreatedAt()
         );
-        rabbitTemplate.convertAndSend("order.exchange", "order.tracking",
-                event);
+//        rabbitTemplate.convertAndSend("order.exchange", "order.tracking",
+//                event);
+
+        streamBridge.send("createOrder-out-0", event);
 
         return Optional.of(mapToOrderResponse(savedOrder));
 
