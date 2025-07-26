@@ -31,12 +31,13 @@ public class UserService {
     public void addUser(UserRequest userRequest){
 //        user.setId(nextId++);
         User user = new User();
-        String token = keyCloakAdminServisce.getAdminAccessToken();
+        String token = keyCloakAdminService.getAdminAccessToken();
         String keycloakUserId = keyCloakAdminService.createUser(token,userRequest);
 //        System.out.println(user);
         updateUserFromRequest(user,userRequest);
 //        System.out.println(user);
         user.setKeycloakId(keycloakUserId);
+        keyCloakAdminService.assignRealmRoleToUser(userRequest.getUsername(),"USER", keycloakUserId);
         userRepository.save(user);
     }
 

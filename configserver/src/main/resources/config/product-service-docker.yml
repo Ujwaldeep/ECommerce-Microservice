@@ -1,4 +1,8 @@
 spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
   rabbitmq:
     host: ${RABBITMQ_HOST:localhost}
     port: ${RABBITMQ_PORT:5672}
@@ -14,33 +18,23 @@ spring:
     tracing:
       sampling:
         probability: 1.0
-  data:
-    mongodb:
-      uri: ${DB_URL}
-      database: ${DB_NAME}
-#  datasource:
-#    url: jdbc:postgresql://localhost:5432/userdb
-#    username: ujwal
-#    password: ujwal
-#
-#  jpa:
-#    show-sql: true
-#    hibernate:
-#      ddl-auto: update
-#
-#    database-platform: org.hibernate.dialect.PostgreSQLDialect
-#    database: postgresql
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
 
-
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database: postgresql
 server:
-  port: 8082
+  port: 8081
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://eurekas:8761/eureka/
     register-with-eureka: true
     fetch-registry: true
+
 
 logging:
   file:
@@ -49,12 +43,3 @@ logging:
     rollingpolicy:
       max-file-size: 5MB
       max-history: 7
-
-keycloak:
-  admin:
-    username: user
-    password: user
-    server-url: http://localhost:8443
-    realm: ecom-app
-    client-id: admin-cli
-    client-uid: TODO
